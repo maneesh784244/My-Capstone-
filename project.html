@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MANSH — Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --card: #1c1c1c;
+      --border: #2a2a2a;
+      --accent: #e8c97e;
+      --accent2: #c9a84c;
+      --text: #f0ece4;
+      --muted: #7a7570;
+      --white: #ffffff;
+      --red: #e05252;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 70px;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex; gap: 2.2rem; list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    .nav-actions {
+      display: flex; align-items: center; gap: 1.2rem;
+    }
+
+    .search-bar {
+      display: flex; align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 0.4rem 1rem;
+      gap: 0.5rem;
+    }
+
+    .search-bar input {
+      background: none; border: none; outline: none;
+      color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem; width: 160px;
+    }
+
+    .search-bar input::placeholder { color: var(--muted); }
+
+    .cart-btn {
+      position: relative;
+      background: var(--accent);
+      color: #0d0d0d;
+      border: none; border-radius: 50%;
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.1rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .cart-btn:hover { background: var(--accent2); transform: scale(1.08); }
+
+    .cart-count {
+      position: absolute; top: -4px; right: -4px;
+      background: var(--red); color: white;
+      border-radius: 50%; width: 17px; height: 17px;
+      font-size: 0.65rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 540px;
+      display: flex; align-items: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0d0d0d 0%, #1a1505 60%, #0d0d0d 100%);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 60% 50%, rgba(232,201,126,0.13) 0%, transparent 70%);
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      padding: 0 2.5rem;
+      max-width: 600px;
+      animation: fadeUp 0.9s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-tag {
+      font-size: 0.75rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem; font-weight: 900;
+      line-height: 1.08;
+      color: var(--white);
+      margin-bottom: 1.2rem;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1rem; line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .hero-btns { display: flex; gap: 1rem; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0d0d0d;
+      border: none; border-radius: 6px;
+      padding: 0.75rem 2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; font-weight: 500;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem 2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; font-weight: 500;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    .hero-deco {
+      position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+      font-family: 'Playfair Display', serif;
+      font-size: 16rem; font-weight: 900;
+      color: rgba(232,201,126,0.04);
+      letter-spacing: -0.05em;
+      user-select: none; pointer-events: none;
+      animation: fadeUp 1.2s ease both 0.2s;
+    }
+
+    /* ── CATEGORIES ── */
+    .section { padding: 4rem 2.5rem; }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem; font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .section-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 2.4rem; }
+
+    .categories-grid {
+      display: flex; gap: 1rem;
+    }
+
+    .cat-card {
+      flex: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.8rem 1.4rem;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s, background 0.2s;
+    }
+    .cat-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      background: #211e14;
+    }
+    .cat-card.active {
+      border-color: var(--accent);
+      background: #211e14;
+    }
+
+    .cat-icon { font-size: 2rem; margin-bottom: 0.7rem; }
+    .cat-name {
+      font-size: 0.85rem; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text);
+    }
+
+    /* ── PRODUCTS ── */
+    .products-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .filter-sort {
+      display: flex; align-items: center; gap: 1rem;
+    }
+
+    .sort-select {
+      background: var(--surface); color: var(--text);
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.45rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem; cursor: pointer; outline: none;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.6rem;
+    }
+
+    .product-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      animation: fadeUp 0.6s ease both;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+      box-shadow: 0 12px 40px rgba(232,201,126,0.08);
+    }
+
+    .product-img {
+      width: 100%; height: 220px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4.5rem;
+      background: linear-gradient(135deg, #1e1e1e, #242424);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: var(--red); color: white;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 4px;
+    }
+
+    .product-badge.new { background: #4caf7d; }
+    .product-badge.hot { background: #e07c52; }
+
+    .product-info { padding: 1.2rem; }
+
+    .product-category {
+      font-size: 0.7rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+
+    .product-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem; font-weight: 700;
+      line-height: 1.3; margin-bottom: 0.5rem;
+    }
+
+    .product-rating {
+      display: flex; align-items: center; gap: 0.3rem;
+      margin-bottom: 0.8rem;
+    }
+    .stars { color: var(--accent); font-size: 0.75rem; }
+    .rating-count { color: var(--muted); font-size: 0.75rem; }
+
+    .product-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .price { font-size: 1.15rem; font-weight: 500; color: var(--accent); }
+    .price-old { font-size: 0.8rem; color: var(--muted); text-decoration: line-through; margin-left: 0.4rem; }
+
+    .add-btn {
+      background: var(--accent);
+      color: #0d0d0d;
+      border: none; border-radius: 8px;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.2rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .add-btn:hover { background: var(--accent2); transform: scale(1.1); }
+
+    /* ── BANNER ── */
+    .promo-banner {
+      margin: 0 2.5rem 4rem;
+      background: linear-gradient(135deg, #1a1505, #211e0d);
+      border: 1px solid var(--accent);
+      border-radius: 16px;
+      padding: 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+      overflow: hidden; position: relative;
+    }
+
+    .promo-banner::before {
+      content: '';
+      position: absolute; right: 0; top: 0; bottom: 0; width: 50%;
+      background: radial-gradient(ellipse at right center, rgba(232,201,126,0.1), transparent 70%);
+    }
+
+    .promo-tag {
+      font-size: 0.75rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 0.8rem;
+    }
+
+    .promo-banner h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem; font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+
+    .promo-banner p { color: var(--muted); max-width: 380px; line-height: 1.6; }
+
+    .promo-code {
+      background: rgba(232,201,126,0.1);
+      border: 1px dashed var(--accent);
+      border-radius: 8px;
+      padding: 1rem 2rem;
+      text-align: center;
+      position: relative; z-index: 1;
+    }
+
+    .promo-code-label { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .promo-code-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 900; color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+    .promo-code-off { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 3rem 2.5rem 2rem;
+    }
+
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem; margin-bottom: 2.5rem;
+    }
+
+    .footer-brand .nav-logo { font-size: 1.6rem; display: block; margin-bottom: 1rem; }
+    .footer-brand p { color: var(--muted); font-size: 0.85rem; line-height: 1.7; max-width: 240px; }
+
+    .footer-col h4 {
+      font-size: 0.75rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 0.7rem; }
+    .footer-col a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--accent); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .footer-bottom p { color: var(--muted); font-size: 0.8rem; }
+
+    .social-links { display: flex; gap: 0.8rem; }
+    .social-btn {
+      width: 34px; height: 34px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .social-btn:hover { border-color: var(--accent); background: #211e14; }
+
+    /* ── CART DRAWER ── */
+    .cart-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+    }
+    .cart-overlay.open { display: block; }
+
+    .cart-drawer {
+      position: fixed; right: 0; top: 0; bottom: 0;
+      width: 380px;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      padding: 2rem;
+      z-index: 201;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      display: flex; flex-direction: column;
+    }
+    .cart-drawer.open { transform: translateX(0); }
+
+    .cart-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .cart-header h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.3rem;
+    }
+    .close-btn {
+      background: none; border: none; color: var(--muted);
+      font-size: 1.4rem; cursor: pointer;
+      transition: color 0.2s;
+    }
+    .close-btn:hover { color: var(--accent); }
+
+    .cart-items { flex: 1; overflow-y: auto; margin-bottom: 1.5rem; }
+
+    .cart-item {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-item-icon {
+      font-size: 2rem;
+      background: var(--card); border-radius: 8px;
+      width: 52px; height: 52px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-size: 0.9rem; margin-bottom: 0.25rem; }
+    .cart-item-price { color: var(--accent); font-size: 0.85rem; }
+
+    .cart-item-qty {
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .qty-btn {
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text); width: 26px; height: 26px;
+      border-radius: 5px; cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s;
+    }
+    .qty-btn:hover { border-color: var(--accent); }
+
+    .cart-item-remove {
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; font-size: 1rem; transition: color 0.2s;
+    }
+    .cart-item-remove:hover { color: var(--red); }
+
+    .cart-empty { text-align: center; color: var(--muted); padding: 3rem 0; font-size: 0.9rem; }
+
+    .cart-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+    }
+
+    .cart-total {
+      display: flex; justify-content: space-between;
+      font-size: 1.05rem; font-weight: 500; margin-bottom: 1.2rem;
+    }
+    .cart-total span:last-child { color: var(--accent); font-family: 'Playfair Display', serif; font-size: 1.2rem; }
+
+    .checkout-btn {
+      width: 100%;
+      background: var(--accent); color: #0d0d0d;
+      border: none; border-radius: 8px;
+      padding: 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .checkout-btn:hover { background: var(--accent2); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--card); border: 1px solid var(--accent);
+      color: var(--text); padding: 0.8rem 1.8rem;
+      border-radius: 30px; font-size: 0.85rem;
+      z-index: 300; opacity: 0;
+      transition: transform 0.4s, opacity 0.4s;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 1.2rem; }
+      .nav-links { display: none; }
+      .search-bar { display: none; }
+      .hero h1 { font-size: 2.6rem; }
+      .hero-deco { display: none; }
+      .section { padding: 3rem 1.2rem; }
+      .categories-grid { flex-wrap: wrap; }
+      .cat-card { min-width: 130px; }
+      .promo-banner { flex-direction: column; gap: 2rem; margin: 0 1.2rem 3rem; }
+      footer { padding: 2rem 1.2rem; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      .cart-drawer { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">MANSH</div>
+  <ul class="nav-links">
+    <li><a href="#products">Shop</a></li>
+    <li><a href="#categories">Categories</a></li>
+    <li><a href="#promo">Offers</a></li>
+    <li><a href="#footer">About</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div class="search-bar">
+      <span>🔍</span>
+      <input type="text" placeholder="Search products…" id="searchInput" oninput="filterProducts()" />
+    </div>
+    <button class="cart-btn" onclick="toggleCart()">
+      🛒
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">✦ New Season Arrivals</div>
+    <h1>Discover <span>Premium</span> Products</h1>
+    <p>Curated collections of fashion, electronics, and home essentials — all in one elegant destination.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Shop Now</button>
+      <button class="btn-outline" onclick="document.getElementById('promo').scrollIntoView({behavior:'smooth'})">View Offers</button>
+    </div>
+  </div>
+  <div class="hero-deco">M</div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section" id="categories">
+  <div class="section-title">Browse Categories</div>
+  <div class="section-sub">Filter by what you love</div>
+  <div class="categories-grid">
+    <div class="cat-card active" onclick="filterCategory('all', this)">
+      <div class="cat-icon">🛍️</div>
+      <div class="cat-name">All</div>
+    </div>
+    <div class="cat-card" onclick="filterCategory('fashion', this)">
+      <div class="cat-icon">👗</div>
+      <div class="cat-name">Fashion</div>
+    </div>
+    <div class="cat-card" onclick="filterCategory('electronics', this)">
+      <div class="cat-icon">📱</div>
+      <div class="cat-name">Electronics</div>
+    </div>
+    <div class="cat-card" onclick="filterCategory('home', this)">
+      <div class="cat-icon">🏠</div>
+      <div class="cat-name">Home</div>
+    </div>
+    <div class="cat-card" onclick="filterCategory('beauty', this)">
+      <div class="cat-icon">💄</div>
+      <div class="cat-name">Beauty</div>
+    </div>
+    <div class="cat-card" onclick="filterCategory('sports', this)">
+      <div class="cat-icon">⚽</div>
+      <div class="cat-name">Sports</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="section" id="products">
+  <div class="products-header">
+    <div>
+      <div class="section-title">Our Products</div>
+      <div class="section-sub" id="productCount">Showing all products</div>
+    </div>
+    <div class="filter-sort">
+      <select class="sort-select" onchange="sortProducts(this.value)">
+        <option value="default">Sort: Default</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="rating">Top Rated</option>
+      </select>
+    </div>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<!-- PROMO BANNER -->
+<section id="promo">
+<div class="promo-banner">
+  <div>
+    <div class="promo-tag">✦ Limited Time Offer</div>
+    <h2>Get 20% Off Your<br>First Order</h2>
+    <p>Use the code at checkout and enjoy exclusive savings on our premium collection. Valid for new customers only.</p>
+  </div>
+  <div class="promo-code">
+    <div class="promo-code-label">Your discount code</div>
+    <div class="promo-code-val">MANSH20</div>
+    <div class="promo-code-off">20% off sitewide</div>
+  </div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="nav-logo">MANSH</span>
+      <p>Premium shopping destination for fashion, electronics, and home essentials. Quality you can trust.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#">New Arrivals</a></li>
+        <li><a href="#">Best Sellers</a></li>
+        <li><a href="#">Sale</a></li>
+        <li><a href="#">Gift Cards</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Shipping</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Privacy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 MANSH. All rights reserved.</p>
+    <div class="social-links">
+      <div class="social-btn">𝕏</div>
+      <div class="social-btn">f</div>
+      <div class="social-btn">in</div>
+      <div class="social-btn">▶</div>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button class="close-btn" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">Your cart is empty 🛍️</div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cartTotal">₹0</span>
+    </div>
+    <button class="checkout-btn" onclick="checkout()">Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const products = [
+    { id:1, name:'Silk Floral Dress', category:'fashion', price:2499, oldPrice:3299, rating:4.8, reviews:124, emoji:'👗', badge:'sale' },
+    { id:2, name:'Wireless Earbuds Pro', category:'electronics', price:3999, oldPrice:5499, rating:4.9, reviews:387, emoji:'🎧', badge:'hot' },
+    { id:3, name:'Premium Yoga Mat', category:'sports', price:1299, oldPrice:null, rating:4.6, reviews:89, emoji:'🧘', badge:'new' },
+    { id:4, name:'Smart Watch Ultra', category:'electronics', price:8999, oldPrice:11999, rating:4.7, reviews:215, emoji:'⌚', badge:'sale' },
+    { id:5, name:'Linen Cushion Set', category:'home', price:999, oldPrice:null, rating:4.5, reviews:63, emoji:'🛋️', badge:null },
+    { id:6, name:'Vitamin C Serum', category:'beauty', price:899, oldPrice:1199, rating:4.8, reviews:302, emoji:'✨', badge:'hot' },
+    { id:7, name:'Running Sneakers', category:'sports', price:4299, oldPrice:5799, rating:4.7, reviews:175, emoji:'👟', badge:'sale' },
+    { id:8, name:'Ceramic Mug Set', category:'home', price:699, oldPrice:null, rating:4.4, reviews:41, emoji:'☕', badge:'new' },
+    { id:9, name:'Leather Tote Bag', category:'fashion', price:3499, oldPrice:4299, rating:4.6, reviews:98, emoji:'👜', badge:null },
+    { id:10, name:'Bluetooth Speaker', category:'electronics', price:2799, oldPrice:3699, rating:4.8, reviews:264, emoji:'🔊', badge:'sale' },
+    { id:11, name:'Scented Candle Set', category:'beauty', price:549, oldPrice:null, rating:4.3, reviews:55, emoji:'🕯️', badge:'new' },
+    { id:12, name:'Trail Backpack 45L', category:'sports', price:2999, oldPrice:3799, rating:4.9, reviews:147, emoji:'🎒', badge:null },
+  ];
+
+  let cart = [];
+  let currentCategory = 'all';
+  let currentSearch = '';
+  let currentSort = 'default';
+
+  function renderProducts() {
+    let list = [...products];
+    if (currentCategory !== 'all') list = list.filter(p => p.category === currentCategory);
+    if (currentSearch) list = list.filter(p => p.name.toLowerCase().includes(currentSearch.toLowerCase()));
+
+    if (currentSort === 'price-asc') list.sort((a,b) => a.price - b.price);
+    else if (currentSort === 'price-desc') list.sort((a,b) => b.price - a.price);
+    else if (currentSort === 'rating') list.sort((a,b) => b.rating - a.rating);
+
+    const grid = document.getElementById('productsGrid');
+    document.getElementById('productCount').textContent = `Showing ${list.length} product${list.length !== 1 ? 's' : ''}`;
+
+    if (list.length === 0) {
+      grid.innerHTML = `<div style="color:var(--muted);grid-column:1/-1;text-align:center;padding:3rem">No products found.</div>`;
+      return;
+    }
+
+    grid.innerHTML = list.map((p, i) => `
+      <div class="product-card" style="animation-delay:${i*0.06}s">
+        <div class="product-img">
+          ${p.badge ? `<div class="product-badge ${p.badge}">${p.badge}</div>` : ''}
+          ${p.emoji}
+        </div>
+        <div class="product-info">
+          <div class="product-category">${p.category}</div>
+          <div class="product-name">${p.name}</div>
+          <div class="product-rating">
+            <span class="stars">${'★'.repeat(Math.floor(p.rating))}${'☆'.repeat(5-Math.floor(p.rating))}</span>
+            <span class="rating-count">${p.rating} (${p.reviews})</span>
+          </div>
+          <div class="product-footer">
+            <div>
+              <span class="price">₹${p.price.toLocaleString()}</span>
+              ${p.oldPrice ? `<span class="price-old">₹${p.oldPrice.toLocaleString()}</span>` : ''}
+            </div>
+            <button class="add-btn" onclick="addToCart(${p.id})">+</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterCategory(cat, el) {
+    currentCategory = cat;
+    document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    renderProducts();
+  }
+
+  function filterProducts() {
+    currentSearch = document.getElementById('searchInput').value;
+    renderProducts();
+  }
+
+  function sortProducts(val) {
+    currentSort = val;
+    renderProducts();
+  }
+
+  function addToCart(id) {
+    const product = products.find(p => p.id === id);
+    const existing = cart.find(i => i.id === id);
+    if (existing) existing.qty++;
+    else cart.push({ ...product, qty: 1 });
+    updateCart();
+    showToast(`✓ ${product.name} added to cart`);
+  }
+
+  function updateCart() {
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    document.getElementById('cartCount').textContent = count;
+    renderCartItems();
+  }
+
+  function renderCartItems() {
+    const container = document.getElementById('cartItems');
+    const footer = document.getElementById('cartFooter');
+
+    if (cart.length === 0) {
+      container.innerHTML = `<div class="cart-empty">Your cart is empty 🛍️</div>`;
+      footer.style.display = 'none';
+      return;
+    }
+
+    footer.style.display = 'block';
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    document.getElementById('cartTotal').textContent = `₹${total.toLocaleString()}`;
+
+    container.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-item-icon">${item.emoji}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-price">₹${(item.price * item.qty).toLocaleString()}</div>
+        </div>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+          <span>${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+        </div>
+        <button class="cart-item-remove" onclick="removeItem(${item.id})">🗑</button>
+      </div>
+    `).join('');
+  }
+
+  function changeQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+    updateCart();
+  }
+
+  function removeItem(id) {
+    cart = cart.filter(i => i.id !== id);
+    updateCart();
+  }
+
+  function toggleCart() {
+    document.getElementById('cartOverlay').classList.toggle('open');
+    document.getElementById('cartDrawer').classList.toggle('open');
+  }
+
+  function checkout() {
+    showToast('🎉 Order placed! Thank you for shopping at MANSH');
+    cart = [];
+    updateCart();
+    toggleCart();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  renderProducts();
+</script>
+</body>
+</html>
